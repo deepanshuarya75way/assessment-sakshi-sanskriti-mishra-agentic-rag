@@ -1,0 +1,49 @@
+MyCompany AI Internal Policy
+
+Company Name: AI Nova Labs
+
+1. AI interns work Monday to Friday from 10:00 AM to 6:00 PM.
+
+2. Interns are assigned projects related to:
+
+* Generative AI
+* NLP
+* Retrieval-Augmented Generation (RAG)
+* Computer Vision
+
+3. The company uses:
+
+* FastAPI for backend services
+* React and TailwindCSS for frontend
+* Qdrant as vector database
+* LangGraph for agent orchestration
+
+4. Every project document uploaded to the system passes through:
+   Document Upload → Cleaning → Chunking → Embedding → Vector Database Storage
+
+5. The default embedding model used internally is:
+   BAAI/bge-small-en-v1.5
+
+6. Employee leave policy:
+
+* 12 casual leaves per year
+* 8 sick leaves per year
+
+7. Project deployment:
+
+* Docker containers
+* AWS EC2
+* GitHub Actions CI/CD
+
+8. Security rules:
+
+* API keys are stored in environment variables
+* Users cannot directly access vector database credentials
+
+9. Team structure:
+
+* 1 Project Manager
+* 3 ML Engineers
+* 2 Backend Engineers
+* 2 Frontend Engineers
+* 1 DevOps Engineer

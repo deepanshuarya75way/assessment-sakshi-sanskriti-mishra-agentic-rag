@@ -1,0 +1,57 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.venv/
+venv/
+ENV/
+env/
+.vscode/
+.DS_Store
+
+# Node
+node_modules/
+npm-debug.log
+yarn-error.log
+dist/
+.env.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Ollama & LLM models
+/models
+*.bin
+
+# Qdrant
+persistent_storage/
+
+# Credentials
+.env
+.env.local
+.env.*.local
+secrets.json
+
+# Logs
+*.log
+/tmp/
