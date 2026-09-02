@@ -45,6 +45,7 @@ dist/
 
 # Qdrant
 persistent_storage/
+.vector_store/
 
 # Credentials
 .env

@@ -1,94 +1,31 @@
-from langchain_community.document_loaders import (
-    PyMuPDFLoader,
-    TextLoader
-)
-
-import os
 from pathlib import Path
 
-all_docs = []
+from langchain_community.document_loaders import PyMuPDFLoader, TextLoader
 
-# Get the base directory (project root)
-backend_dir = Path(__file__).parent
-base_dir = backend_dir.parent
-
-# Define paths
-pdf_folder = str(base_dir / "data" / "research_papers")
-txt_folder = str(base_dir / "data" / "research_papers" / "custom")
+from config import PROJECT_ROOT
 
 
-# -----------------------------
-# Load PDFs
-# -----------------------------
-
-if os.path.exists(pdf_folder):
-    for file in os.listdir(pdf_folder):
-
-        if file.endswith(".pdf"):
-
-            path = os.path.join(
-                pdf_folder,
-                file
-            )
-
-            print(f"Loading PDF: {file}")
-
-            loader = PyMuPDFLoader(path)
-
-            docs = loader.load()
-
-        all_docs.extend(docs)
-else:
-    print(f"PDF folder not found: {pdf_folder}")
+DOCUMENTS_DIR = PROJECT_ROOT / "data" / "research_papers"
 
 
-# -----------------------------
-# Load TXT files
-# -----------------------------
+def load_documents(documents_dir: Path = DOCUMENTS_DIR):
+    """Load the repository's PDF and text knowledge-base files."""
+    if not documents_dir.exists():
+        raise FileNotFoundError(f"Knowledge-base directory does not exist: {documents_dir}")
 
-try:
-    if os.path.exists(txt_folder):
-        for file in os.listdir(txt_folder):
-            if file.endswith(".txt"):
-                path = os.path.join(txt_folder, file)
-                print(f"Loading TXT: {file}")
-                
-                try:
-                    # Try with encoding
-                    loader = TextLoader(path, encoding="utf-8")
-                    docs = loader.load()
-                    all_docs.extend(docs)
-                    print(f"  ✓ Loaded {len(docs)} docs from {file}")
-                except Exception as e:
-                    print(f"  ✗ Error loading {file}: {e}")
-                    # Try with different encoding
-                    try:
-                        loader = TextLoader(path, encoding="latin-1")
-                        docs = loader.load()
-                        all_docs.extend(docs)
-                        print(f"  ✓ Loaded {len(docs)} docs with latin-1 encoding")
-                    except Exception as e2:
-                        print(f"  ✗ Failed to load with latin-1: {e2}")
-    else:
-        print(f"Custom folder not found: {txt_folder}")
+    documents = []
+    failures = []
+    for path in sorted(documents_dir.rglob("*")):
+        if not path.is_file() or path.suffix.lower() not in {".pdf", ".txt"}:
+            continue
+        try:
+            loader = PyMuPDFLoader(str(path)) if path.suffix.lower() == ".pdf" else TextLoader(str(path), encoding="utf-8")
+            documents.extend(loader.load())
+        except Exception as error:
+            failures.append(f"{path.name}: {error}")
 
-except FileNotFoundError:
-    print(f"Error accessing TXT folder: {txt_folder}")
+    if not documents:
+        detail = "; ".join(failures) if failures else "No supported documents were found."
+        raise RuntimeError(f"Could not load knowledge-base documents. {detail}")
 
-
-# -----------------------------
-# Results
-# -----------------------------
-
-print("\n")
-print("="*50)
-
-print("Total loaded docs:", len(all_docs))
-
-print("="*50)
-
-print("\nSample content:\n")
-
-print(
-    all_docs[0].page_content[:500]
-)
+    return documents, failures
